@@ -9,39 +9,40 @@ def process_until_EOF(file):
         if result:
             matched_lines.append(result)
             if DEBUG:
-                print("Matched: {}".format(result))
+                print(f"Matched: {result}")
     return matched_lines
 
 def find_match(line):
-    for string in match_strings:
+    for string in MATCH_STRINGS:
         if string in line:
             if DEBUG:
-                print("Found match:{}".format(line))
-            return line
+                print(f"Found match:{line}")
+            return C
     return None
 
-def process_match(matches):
-    if matches:
-        for entry in matches:
-            send_to_slack(slack_message_channel, entry)
+def process_match(matched_lines):
+    if matched_lines:
+        for line in matched_line:
+            send_to_slack(SLACK_MESSAGE_CHANNEL, line)
+
 
 def send_to_slack(channel, message):
     clean_line = message.rstrip()
     slack.chat.post_message(channel, clean_line, as_user=True)
-    print("Sent to slack: {}".format(clean_line))
+    print(f"Sent to slack: {clean_line}")
 
 if __name__ == '__main__':
-    slack = Slacker(slack_api_token)
+    slack = Slacker(SLACK_API_TOKEN)
 
-    with open("C:\Program Files (x86)\Steam\steamapps\common\Path of Exile\logs\Client.txt", 'r', encoding='latin1') as log_file:
-        if process_existing:
+    with open(f"{LOG_PATH}", 'r', encoding='latin1') as log_file:
+        if PROCESS_EXISTING:
             matched_lines = process_until_EOF(log_file)
             process_match(matched_lines)
         else:
             log_file.seek(0, io.SEEK_END)
 
         print("Initial file read completed.")
-        print("Now monitoring log_file for new entries every {} seconds.  Press Ctrl + C to exit!".format(check_frequency))
+        print(f"Now monitoring log_file for new entries every {CHECK_FREQUENCY} seconds.  Press Ctrl + C to exit!")
 
         current_file_size = os.stat("C:\Program Files (x86)\Steam\steamapps\common\Path of Exile\logs\Client.txt").st_size
         new_file_size = 0
@@ -49,10 +50,10 @@ if __name__ == '__main__':
         # Every x seconds, check if filesize has changed.  Read lines until EOF
         try:
             while True:
-                new_file_size = os.stat("C:\Program Files (x86)\Steam\steamapps\common\Path of Exile\logs\Client.txt").st_size
+                new_file_size = os.stat(f"{LOG_PATH}").st_size
                 if new_file_size > current_file_size:
                     if DEBUG:
-                        print("Filesize changed from {} to {} bytes.".format(current_file_size, new_file_size))
+                        print(f"Filesize changed from {current_file_size} to {new_file_size} bytes.")
 
                     current_file_size = new_file_size
                     matched_lines = process_until_EOF(log_file)
@@ -60,5 +61,5 @@ if __name__ == '__main__':
 
                 time.sleep(check_frequency)
         except KeyboardInterrupt:
-            print('Monitor interrupted, exiting!')
+            print("Monitor interrupted, exiting!")
             exit(1)
