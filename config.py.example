@@ -1,0 +1,27 @@
+LOG_PATH="~/.steam/steam/steamapps/common/Path of Exile/logs/Client.txt"
+#LOG_PATH = r"C:\Program Files (x86)\Steam\steamapps\common\Path of Exile\logs\Client.txt"
+
+PLATFORM = "discord"
+#PLATFORM = "slack"
+
+DISCORD_WEBHOOK = "https://discordapp.com/api/webhooks/12345678/abcdefghijklmnop"
+DISCORD_BOT_NAME = "PoEBot"
+DISCORD_MENTION_ID = "1234567890101234"
+
+SLACK_API_TOKEN = "SLACK API TOKEN HERE"
+SLACK_MESSAGE_CHANNEL = "@username_or_channel"
+
+################################################
+# No changes below here should be necessary for
+# most use cases
+################################################
+# Frequency in seconds to search log for new entries.
+CHECK_FREQUENCY = 5
+
+# True = look at additional log lines, False = only parse new entries since run.
+PROCESS_EXISTING = False
+
+# Change this to look for additional matches.
+MATCH_REGEXES = ("@From.*like to buy your", "disconnect")
+
+DEBUG = False
